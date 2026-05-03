@@ -4,4 +4,3 @@ from dataclasses import dataclass
 class CashOutDTO:
     base: int
     category: str
-    date: int

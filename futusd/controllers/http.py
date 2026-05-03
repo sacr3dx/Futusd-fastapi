@@ -25,7 +25,7 @@ async def get_spending(
         )
 
     return SpendingSchema(
-        base= spending_dm.base,
+        base=spending_dm.base,
         category=spending_dm.category,
         date=spending_dm.date
     )
@@ -36,10 +36,10 @@ async def add_spending(
         data: SpendingSchema,
         interactor: FromDishka[NewSpendingInteractor]
 ) -> str:
+
     dto = CashOutDTO(
         base=data.base,
-        category=data.category,
-        date=data.date
+        category=data.category
     )
     uuid = await interactor(dto)
     return uuid

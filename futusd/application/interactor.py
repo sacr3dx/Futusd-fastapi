@@ -1,6 +1,9 @@
+from datetime import date
+
 from futusd.application import interfaces
 from futusd.application.dto import CashOutDTO
 from futusd.domain import entities
+
 
 class GetSpendingInteractor:
     def __init__(self, get_spending: interfaces.SpendingReader) -> None:
@@ -23,11 +26,12 @@ class NewSpendingInteractor:
 
     async def __call__(self, dt: CashOutDTO) -> str:
         uuid = str(self._generate_uuid())
+        date_add = date.today()
         spending = entities.CashOutDM(
             uuid=uuid,
             base=dt.base,
             category=dt.category,
-            date=dt.date
+            date=date_add
         )
 
         await self._get_spending.save(spending)
