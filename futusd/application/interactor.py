@@ -13,6 +13,15 @@ class GetSpendingInteractor:
         return await self._get_spending.read_by_uuid(uuid)
 
 
+class AllSpendingInteractor:
+    def __init__(self, get_all_spending: interfaces.AllSpendingReader) -> None:
+        self._get_all_spending=get_all_spending
+
+    async def __call__(self) -> list[entities.CashOutDM]:
+        return await self._get_all_spending.read_all()
+
+
+
 class NewSpendingInteractor:
     def __init__(
             self,

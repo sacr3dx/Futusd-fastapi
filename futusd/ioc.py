@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from futusd.application import interfaces
 from futusd.application.interactor import (
     GetSpendingInteractor,
+    AllSpendingInteractor,
     NewSpendingInteractor
 )
 from futusd.application.interfaces import DBSession
@@ -38,9 +39,11 @@ class AppProvider(Provider):
         scope = Scope.REQUEST,
         provides=AnyOf[
             interfaces.SpendingReader,
+            interfaces.AllSpendingReader,
             interfaces.SpendingSaver]
     )
 
     get_spending_interactor = provide(GetSpendingInteractor, scope=Scope.REQUEST)
+    all_spending_interactor = provide(AllSpendingInteractor, scope=Scope.REQUEST)
     new_spending_interactor = provide(NewSpendingInteractor, scope=Scope.REQUEST)
     config = from_context(provides=Config, scope=Scope.APP)

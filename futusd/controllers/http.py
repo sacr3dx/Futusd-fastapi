@@ -5,8 +5,9 @@ from uuid import UUID
 
 from starlette.status import HTTP_404_NOT_FOUND
 
-from futusd.application.interactor import NewSpendingInteractor, GetSpendingInteractor
+from futusd.application.interactor import NewSpendingInteractor, GetSpendingInteractor, AllSpendingInteractor
 from futusd.application.dto import CashOutDTO
+from futusd.domain.entities import CashOutDM
 from futusd.controllers.schemas import SpendingSchema
 
 spending_router = APIRouter(prefix="/spending", route_class=DishkaRoute)
@@ -29,6 +30,20 @@ async def get_spending(
         category=spending_dm.category,
         date=spending_dm.date
     )
+
+@spending_router.get('/all_spending')
+async def get_all_spending(
+        interactor: FromDishka[AllSpendingInteractor]
+) -> list[CashOutDM]:
+    all_spending = await interactor()
+
+    if not all_spending:
+        raise HTTPException(
+            status_code=HTTP_404_NOT_FOUND,
+            detail="Spending not found"
+        )
+
+    return all_spending
 
 
 @spending_router.post("/spending_add")
