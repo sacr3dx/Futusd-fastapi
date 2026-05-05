@@ -26,7 +26,7 @@ class NewSpendingInteractor:
     def __init__(
             self,
             db_session: interfaces.DBSession,
-            get_spending: interfaces.SpendingReader,
+            get_spending: interfaces.SpendingSaver,
             generate_uuid: interfaces.GenerateUUID
     ) -> None:
         self._db_session=db_session
@@ -47,3 +47,17 @@ class NewSpendingInteractor:
         await self._db_session.commit()
         return uuid
 
+
+class DeleteSpendingInteractor:
+    def __init__(
+            self,
+            db_session: interfaces.DBSession,
+            del_spending: interfaces.SpendingDeleter
+    ) -> None:
+        self._db_session=db_session
+        self._del_spending=del_spending
+
+    async def __call__(self, uuid: str) -> str | None:
+        await self._del_spending.del_by_uuid(uuid)
+        await self._db_session.commit()
+        return f'{uuid} has been deleted'

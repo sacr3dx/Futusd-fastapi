@@ -5,7 +5,12 @@ from uuid import UUID
 
 from starlette.status import HTTP_404_NOT_FOUND
 
-from futusd.application.interactor import NewSpendingInteractor, GetSpendingInteractor, AllSpendingInteractor
+from futusd.application.interactor import (
+    NewSpendingInteractor,
+    GetSpendingInteractor,
+    AllSpendingInteractor,
+    DeleteSpendingInteractor
+)
 from futusd.application.dto import CashOutDTO
 from futusd.domain.entities import CashOutDM
 from futusd.controllers.schemas import SpendingSchema
@@ -45,6 +50,19 @@ async def get_all_spending(
 
     return all_spending
 
+@spending_router.delete("/{spending_id:uuid}")
+async def delete_spending(
+        spending_id: Annotated[UUID, Path(description="Spending_ID", title="Spending_ID")],
+        interactor: FromDishka[DeleteSpendingInteractor]
+) -> str:
+
+    del_spending = await interactor(uuid = str(spending_id))
+    if not del_spending:
+        raise HTTPException(
+            status_code=HTTP_404_NOT_FOUND,
+            detail="Spending not found"
+        )
+    return f'{spending_id} has been deleted'
 
 @spending_router.post("/spending_add")
 async def add_spending(

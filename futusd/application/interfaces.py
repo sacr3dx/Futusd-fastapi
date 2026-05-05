@@ -11,6 +11,12 @@ class SpendingSaver(Protocol):
         ...
 
 
+class SpendingDeleter(Protocol):
+    @abstractmethod
+    async def del_by_uuid(self, uuid: str) -> str | None:
+        ...
+
+
 class SpendingReader(Protocol):
     @abstractmethod
     async def read_by_uuid(self, uuid: str) -> CashOutDM | None:
@@ -28,8 +34,8 @@ class GenerateUUID(Protocol):
 
 
 class DBSession(Protocol):
-    def commit(self) -> None:
+    async def commit(self) -> None:
         ...
 
-    def flush(self) -> None:
+    async def flush(self) -> None:
         ...

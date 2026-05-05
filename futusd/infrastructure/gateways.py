@@ -2,14 +2,20 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 
-from futusd.application.interfaces import SpendingReader, SpendingSaver, AllSpendingReader
+from futusd.application.interfaces import (
+    SpendingReader,
+    SpendingSaver,
+    AllSpendingReader,
+    SpendingDeleter
+)
 from futusd.domain.entities import CashOutDM
 from futusd.infrastructure.models import CashOutModel
 
 class SpendingGateway(
     SpendingReader,
     SpendingSaver,
-    AllSpendingReader
+    AllSpendingReader,
+    SpendingDeleter
 ):
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
@@ -28,6 +34,18 @@ class SpendingGateway(
             category=row.category,
             date=row.date
         )
+
+
+    async def del_by_uuid(self, uuid: str) -> str | None:
+        query = select(CashOutModel).where(
+            CashOutModel.uuid == uuid
+        )
+        result = await self._session.execute(query)
+        obj = result.scalar_one_or_none()
+        if obj:
+            await self._session.delete(obj)
+            await self._session.commit()
+
 
     async def read_all(self) -> list[CashOutDM]:
         result = await self._session.execute(select(CashOutModel))

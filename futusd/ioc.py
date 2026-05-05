@@ -7,7 +7,8 @@ from futusd.application import interfaces
 from futusd.application.interactor import (
     GetSpendingInteractor,
     AllSpendingInteractor,
-    NewSpendingInteractor
+    NewSpendingInteractor,
+    DeleteSpendingInteractor
 )
 from futusd.application.interfaces import DBSession
 
@@ -40,10 +41,13 @@ class AppProvider(Provider):
         provides=AnyOf[
             interfaces.SpendingReader,
             interfaces.AllSpendingReader,
-            interfaces.SpendingSaver]
+            interfaces.SpendingSaver,
+            interfaces.SpendingDeleter
+        ]
     )
 
     get_spending_interactor = provide(GetSpendingInteractor, scope=Scope.REQUEST)
     all_spending_interactor = provide(AllSpendingInteractor, scope=Scope.REQUEST)
+    del_spending_interactor = provide(DeleteSpendingInteractor, scope=Scope.REQUEST)
     new_spending_interactor = provide(NewSpendingInteractor, scope=Scope.REQUEST)
     config = from_context(provides=Config, scope=Scope.APP)
