@@ -11,8 +11,8 @@ from futusd.application.interactor import (
     AllSpendingInteractor,
     DeleteSpendingInteractor
 )
-from futusd.application.dto import CashOutDTO
-from futusd.domain.entities import CashOutDM
+from futusd.application.dto import SpendingDTO
+from futusd.domain.entities import SpendingDM
 from futusd.controllers.schemas import SpendingSchema
 
 spending_router = APIRouter(prefix="/spending", route_class=DishkaRoute)
@@ -39,7 +39,7 @@ async def get_spending(
 @spending_router.get('/all_spending')
 async def get_all_spending(
         interactor: FromDishka[AllSpendingInteractor]
-) -> list[CashOutDM]:
+) -> list[SpendingDM]:
     all_spending = await interactor()
 
     if not all_spending:
@@ -70,7 +70,7 @@ async def add_spending(
         interactor: FromDishka[NewSpendingInteractor]
 ) -> str:
 
-    dto = CashOutDTO(
+    dto = SpendingDTO(
         base=data.base,
         category=data.category
     )

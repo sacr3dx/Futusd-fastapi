@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
 @dataclass(slots=True)
-class CashOutDTO:
+class SpendingDTO:
     base: int
     category: str

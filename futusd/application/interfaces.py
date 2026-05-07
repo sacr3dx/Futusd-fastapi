@@ -2,12 +2,12 @@ from abc import abstractmethod
 from typing import Protocol
 from uuid import UUID
 
-from futusd.domain.entities import CashOutDM
+from futusd.domain.entities import SpendingDM
 
 
 class SpendingSaver(Protocol):
     @abstractmethod
-    async def save(self, spending: CashOutDM) -> None:
+    async def save(self, spending: SpendingDM) -> None:
         ...
 
 
@@ -19,13 +19,13 @@ class SpendingDeleter(Protocol):
 
 class SpendingReader(Protocol):
     @abstractmethod
-    async def read_by_uuid(self, uuid: str) -> CashOutDM | None:
+    async def read_by_uuid(self, uuid: str) -> SpendingDM | None:
         ...
 
 
 class AllSpendingReader(Protocol):
     @abstractmethod
-    async def read_all(self) -> list[CashOutDM]:
+    async def read_all(self) -> list[SpendingDM]:
         ...
 
 class GenerateUUID(Protocol):
