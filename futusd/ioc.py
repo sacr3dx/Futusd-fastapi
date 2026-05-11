@@ -13,7 +13,7 @@ from futusd.application.interactor import (
 from futusd.application.interfaces import DBSession
 
 from futusd.config import Config
-from futusd.infrastructure.database import new_session_maker
+from futusd.infrastructure.database.database import new_session_maker
 from futusd.infrastructure.gateways import SpendingGateway
 
 

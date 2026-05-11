@@ -12,8 +12,7 @@ from futusd.application.interactor import (
     DeleteSpendingInteractor
 )
 from futusd.application.dto import SpendingDTO
-from futusd.domain.entities import SpendingDM
-from futusd.controllers.schemas import SpendingSchema
+from futusd.controllers.schemas import SpendingCreateSchema, SpendingResponseSchema
 
 spending_router = APIRouter(prefix="/spending", route_class=DishkaRoute)
 
@@ -21,7 +20,7 @@ spending_router = APIRouter(prefix="/spending", route_class=DishkaRoute)
 async def get_spending(
         spending_id: Annotated[UUID, Path(description="Spending_ID", title="Spending_ID")],
         interactor: FromDishka[GetSpendingInteractor]
-)->SpendingSchema:
+)->SpendingResponseSchema:
     spending_dm = await interactor(uuid=str(spending_id))
 
     if not spending_dm:
@@ -30,7 +29,8 @@ async def get_spending(
             detail="Spending not found"
         )
 
-    return SpendingSchema(
+    return SpendingResponseSchema(
+        uuid=spending_dm.uuid,
         base=spending_dm.base,
         category=spending_dm.category,
         date=spending_dm.date
@@ -39,7 +39,7 @@ async def get_spending(
 @spending_router.get('/all_spending')
 async def get_all_spending(
         interactor: FromDishka[AllSpendingInteractor]
-) -> list[SpendingDM]:
+) -> list[SpendingResponseSchema]:
     all_spending = await interactor()
 
     if not all_spending:
@@ -48,7 +48,15 @@ async def get_all_spending(
             detail="Spending not found"
         )
 
-    return all_spending
+    return [
+        SpendingResponseSchema(
+            uuid=s.uuid,
+            base=s.base,
+            category=s.category,
+            date=s.date
+        )
+        for s in all_spending
+    ]
 
 @spending_router.delete("/{spending_id:uuid}")
 async def delete_spending(
@@ -66,7 +74,7 @@ async def delete_spending(
 
 @spending_router.post("/spending_add")
 async def add_spending(
-        data: SpendingSchema,
+        data: SpendingCreateSchema,
         interactor: FromDishka[NewSpendingInteractor]
 ) -> str:
 

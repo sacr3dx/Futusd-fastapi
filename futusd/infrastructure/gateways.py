@@ -9,7 +9,7 @@ from futusd.application.interfaces import (
     SpendingDeleter
 )
 from futusd.domain.entities import SpendingDM
-from futusd.infrastructure.models import CashOutModel
+from futusd.infrastructure.database.models import CashOutModel
 
 class SpendingGateway(
     SpendingReader,
