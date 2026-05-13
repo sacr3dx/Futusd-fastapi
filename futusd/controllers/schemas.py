@@ -11,3 +11,6 @@ class SpendingResponseSchema(BaseModel):
     base: int = Field(gt=0, description="Spending amount")
     category: str = Field(min_length=1, max_length=20, description="Name of spending group")
     date: date
+
+class AIAnalyzeResponse(BaseModel):
+    message: str

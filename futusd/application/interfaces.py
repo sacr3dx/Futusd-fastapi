@@ -39,3 +39,7 @@ class DBSession(Protocol):
 
     async def flush(self) -> None:
         ...
+
+class AIAnalyze(Protocol):
+    async def analyze_saver(self, spending: list[SpendingDM]) -> str:
+        ...

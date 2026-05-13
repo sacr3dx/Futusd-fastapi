@@ -6,7 +6,8 @@ from futusd.application.interfaces import (
     SpendingReader,
     SpendingSaver,
     AllSpendingReader,
-    SpendingDeleter
+    SpendingDeleter,
+    AIAnalyze
 )
 from futusd.domain.entities import SpendingDM
 from futusd.infrastructure.database.models import CashOutModel
@@ -74,3 +75,8 @@ class SpendingGateway(
         self._session.add(model)
         await self._session.commit()
 
+class AiGateways(
+    AIAnalyze
+):
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session

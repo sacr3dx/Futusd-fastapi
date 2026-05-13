@@ -8,14 +8,16 @@ from futusd.application.interactor import (
     GetSpendingInteractor,
     AllSpendingInteractor,
     NewSpendingInteractor,
-    DeleteSpendingInteractor
+    DeleteSpendingInteractor,
+    AIAnalyzeInteractor
 )
+from futusd.application.interfaces import AIAnalyze
 from futusd.application.interfaces import DBSession
 
 from futusd.config import Config
 from futusd.infrastructure.database.database import new_session_maker
-from futusd.infrastructure.gateways import SpendingGateway
-
+from futusd.infrastructure.database.gateways import SpendingGateway
+from futusd.infrastructure.ai.groq import GroqAdapter
 
 class AppProvider(Provider):
 
@@ -35,6 +37,10 @@ class AppProvider(Provider):
         async with session_maker() as session:
             yield session
 
+    @provide(scope=Scope.APP)
+    def get_groq_adapter(self, config: Config) -> AIAnalyze:
+        return GroqAdapter(api_key=config.groq.api_key)
+
     spending_gateways = provide(
         SpendingGateway,
         scope = Scope.REQUEST,
@@ -50,4 +56,6 @@ class AppProvider(Provider):
     all_spending_interactor = provide(AllSpendingInteractor, scope=Scope.REQUEST)
     del_spending_interactor = provide(DeleteSpendingInteractor, scope=Scope.REQUEST)
     new_spending_interactor = provide(NewSpendingInteractor, scope=Scope.REQUEST)
+
+    ai_analyze_interactor = provide(AIAnalyzeInteractor, scope=Scope.REQUEST)
     config = from_context(provides=Config, scope=Scope.APP)

@@ -61,3 +61,17 @@ class DeleteSpendingInteractor:
         await self._del_spending.del_by_uuid(uuid)
         await self._db_session.commit()
         return f'{uuid} has been deleted'
+
+
+class AIAnalyzeInteractor:
+    def __init__(
+            self,
+            get_saver: interfaces.AIAnalyze,
+            get_all_spending: interfaces.AllSpendingReader
+    ) -> None:
+        self._get_saver=get_saver
+        self._get_all_spending=get_all_spending
+
+    async def __call__(self) -> str:
+        spending = await self._get_all_spending.read_all()
+        return await self._get_saver.analyze_saver(spending)

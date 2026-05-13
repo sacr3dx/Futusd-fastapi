@@ -8,6 +8,9 @@ class PostgresConfig(BaseModel):
     password: str
     database: str
 
+class GroqConfig(BaseModel):
+    api_key: str
+
 class Config(BaseModel):
     postgres: PostgresConfig = Field(
         default_factory=lambda: PostgresConfig(
@@ -16,5 +19,11 @@ class Config(BaseModel):
             login=env["POSTGRES_USER"],
             password=env["POSTGRES_PASSWORD"],
             database=env["POSTGRES_DB"],
+        )
+    )
+
+    groq: GroqConfig = Field(
+        default_factory=lambda: GroqConfig(
+            api_key=env["GROQ_API_KEY"]
         )
     )
