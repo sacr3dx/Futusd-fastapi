@@ -14,7 +14,7 @@ from futusd.application.interactor import (
 from futusd.application.dto import SpendingDTO
 from futusd.controllers.schemas import SpendingCreateSchema, SpendingResponseSchema
 
-spending_router = APIRouter(prefix="/spending", route_class=DishkaRoute)
+spending_router = APIRouter(prefix="/spending", route_class=DishkaRoute, tags=["Spending_function"])
 
 @spending_router.get("/{spending_id:uuid}")
 async def get_spending(

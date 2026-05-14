@@ -41,5 +41,6 @@ class DBSession(Protocol):
         ...
 
 class AIAnalyze(Protocol):
+    @abstractmethod
     async def analyze_saver(self, spending: list[SpendingDM]) -> str:
         ...
