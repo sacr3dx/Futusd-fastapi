@@ -17,7 +17,7 @@ from futusd.application.interfaces import DBSession
 from futusd.config import Config
 from futusd.infrastructure.database.database import new_session_maker
 from futusd.infrastructure.database.gateways import SpendingGateway
-from futusd.infrastructure.ai.groq import GroqAdapter
+from futusd.infrastructure.ai.groq_client import GroqAdapter
 
 class AppProvider(Provider):
 

@@ -44,3 +44,14 @@ class AIAnalyze(Protocol):
     @abstractmethod
     async def analyze_saver(self, spending: list[SpendingDM]) -> str:
         ...
+
+class SessionRepository(Protocol):
+    @abstractmethod
+    async def create(self, user_uuid: str) -> str:
+        ...
+
+    async def get_user_uuid(self, session_id: str) -> str | None:
+        ...
+
+    async def delete(self, session_id: str) -> None:
+        ...

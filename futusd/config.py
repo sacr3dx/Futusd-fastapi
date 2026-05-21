@@ -8,6 +8,10 @@ class PostgresConfig(BaseModel):
     password: str
     database: str
 
+class RedisConfig(BaseModel):
+    host: str
+    port: int
+
 class GroqConfig(BaseModel):
     api_key: str
 
@@ -19,6 +23,13 @@ class Config(BaseModel):
             login=env["POSTGRES_USER"],
             password=env["POSTGRES_PASSWORD"],
             database=env["POSTGRES_DB"],
+        )
+    )
+
+    redis: RedisConfig = Field(
+        default_factory=lambda: RedisConfig(
+            host=env["REDIS_HOST"],
+            port=int(env["REDIS_PORT"])
         )
     )
 
