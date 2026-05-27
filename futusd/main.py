@@ -3,8 +3,8 @@ from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
 
 from futusd.config import Config
-from futusd.controllers.http import spending_router
-from futusd.controllers.ai import ai_router
+from futusd.controllers.spending.http import spending_router
+from futusd.controllers.spending.ai import ai_router
 from futusd.ioc import AppProvider
 
 config = Config()

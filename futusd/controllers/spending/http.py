@@ -12,7 +12,7 @@ from futusd.application.interactor import (
     DeleteSpendingInteractor
 )
 from futusd.application.dto import SpendingDTO
-from futusd.controllers.schemas import SpendingCreateSchema, SpendingResponseSchema
+from futusd.controllers.spending.schemas import SpendingCreateSchema, SpendingResponseSchema
 
 spending_router = APIRouter(prefix="/spending", route_class=DishkaRoute, tags=["Spending_function"])
 

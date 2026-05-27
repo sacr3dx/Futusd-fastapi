@@ -75,3 +75,28 @@ class AIAnalyzeInteractor:
     async def __call__(self) -> str:
         spending = await self._get_all_spending.read_all()
         return await self._get_saver.analyze_saver(spending)
+
+
+class UserRegisterInteractor:
+    def __init__(
+            self,
+            db_session: interfaces.DBSession,
+            user_saver: interfaces.RegisterUser,
+            generate_uuid: interfaces.GenerateUUID
+    ) -> None:
+        self._db_session = db_session
+        self._user_saver=user_saver
+        self._generate_uuid=generate_uuid
+
+    async def __call__(self, dt: entities.UserDM) -> str:
+        uuid = str(self._generate_uuid())
+
+
+        user = entities.UserDM(
+            uuid = uuid,
+            username = dt.username,
+            hashed_password=dt.hashed_password
+        )
+        await self._user_saver.register(user)
+        await self._db_session.commit()
+        return uuid

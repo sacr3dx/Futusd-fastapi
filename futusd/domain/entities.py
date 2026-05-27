@@ -8,4 +8,9 @@ class SpendingDM:
     category: str
     date: date
 
+@dataclass(slots=True)
+class UserDM:
+    uuid: str
+    username: str
+    hashed_password: str
 

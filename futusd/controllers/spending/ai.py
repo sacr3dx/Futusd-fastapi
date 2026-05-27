@@ -2,7 +2,7 @@ from dishka.integrations.fastapi import FromDishka, DishkaRoute
 from fastapi import APIRouter
 
 from futusd.application.interactor import AIAnalyzeInteractor
-from futusd.controllers.schemas import AIAnalyzeResponse
+from futusd.controllers.spending.schemas import AIAnalyzeResponse
 
 ai_router = APIRouter(prefix="/ai_functional", route_class=DishkaRoute, tags=["AI_function"])
 
