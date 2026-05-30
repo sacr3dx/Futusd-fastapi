@@ -14,6 +14,7 @@ class RedisConfig(BaseModel):
 
 class GroqConfig(BaseModel):
     api_key: str
+    model: str
 
 class Config(BaseModel):
     postgres: PostgresConfig = Field(
@@ -35,6 +36,7 @@ class Config(BaseModel):
 
     groq: GroqConfig = Field(
         default_factory=lambda: GroqConfig(
-            api_key=env["GROQ_API_KEY"]
+            api_key=env["GROQ_API_KEY"],
+            model=env["GROQ_MODEL"]
         )
     )
