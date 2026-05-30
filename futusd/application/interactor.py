@@ -1,7 +1,9 @@
 from datetime import date
 
+from passlib.context import CryptContext
+
 from futusd.application import interfaces
-from futusd.application.dto import SpendingDTO
+from futusd.application.dto import SpendingDTO, UserDTO
 from futusd.domain import entities
 
 
@@ -82,21 +84,22 @@ class UserRegisterInteractor:
             self,
             db_session: interfaces.DBSession,
             user_saver: interfaces.RegisterUser,
-            generate_uuid: interfaces.GenerateUUID
+            generate_uuid: interfaces.GenerateUUID,
+            pwd_context: CryptContext
     ) -> None:
         self._db_session = db_session
         self._user_saver=user_saver
         self._generate_uuid=generate_uuid
+        self._pwd_context=pwd_context
 
-    async def __call__(self, dt: entities.UserDM) -> str:
+    async def __call__(self, dt: UserDTO) -> str:
         uuid = str(self._generate_uuid())
-
-
+        password = self._pwd_context.hash(dt.password)
         user = entities.UserDM(
             uuid = uuid,
             username = dt.username,
-            hashed_password=dt.hashed_password
+            hashed_password=password
         )
-        await self._user_saver.register(user)
+        await self._user_saver.register(uuid, user.uuid)
         await self._db_session.commit()
         return uuid

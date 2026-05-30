@@ -1,15 +1,19 @@
 import redis.asyncio as redis
 
-from uuid import uuid4
+from futusd.application.interfaces import (
+    RegisterUser,
+    InLoginUser,
+)
 
-from futusd.application.interfaces import SessionRepository
-
-class SessionGateway(SessionRepository):
-    def __init__(self, redis_client: redis.Redis):
+class SessionGateway(
+    RegisterUser,
+    InLoginUser
+):
+    def __init__(self, redis_client: redis.Redis) -> None:
         self._redis=redis_client
 
-    async def create(self, user_uuid: str) -> str:
-        session_id=str(uuid4())
+    async def register(self, session_id: str, user_uuid: str) -> str:
+        session_id= session_id
         await self._redis.setex(
             name=f"session:{session_id}",
             time=3600,

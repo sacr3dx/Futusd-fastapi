@@ -14,10 +14,3 @@ class CashOutModel(Base):
     base: Mapped[int] = mapped_column(Integer)
     category: Mapped[str] = mapped_column(String(15))
     date: Mapped[str] = mapped_column(DATE)
-
-class UsersModel(Base):
-    __tablename__ = "users"
-
-    uuid: Mapped[UUID] = mapped_column(primary_key=True, default=uuid.uuid4())
-    username: Mapped[str] = mapped_column(String(25))
-    hashed_password: Mapped[str] = mapped_column(String)

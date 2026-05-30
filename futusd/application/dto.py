@@ -6,11 +6,6 @@ class SpendingDTO:
     category: str
 
 @dataclass(slots=True)
-class RegisterDTO:
-    username: str
-    password: str
-
-@dataclass(slots=True)
-class LoginDTO:
+class UserDTO:
     username: str
     password: str

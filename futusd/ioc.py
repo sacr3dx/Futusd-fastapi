@@ -1,7 +1,9 @@
 from typing import AsyncIterable
 from uuid import uuid4
+from passlib.context import CryptContext
 
 from dishka import Provider, Scope, provide, AnyOf, from_context
+from passlib.handlers.bcrypt import bcrypt
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from futusd.application import interfaces
 from futusd.application.interactor import (
@@ -26,6 +28,10 @@ class AppProvider(Provider):
         return uuid4
 
     @provide(scope=Scope.APP)
+    def hashing_generate(self, obj) -> CryptContext:
+        return CryptContext(schemes=[bcrypt])
+
+    @provide(scope=Scope.APP)
     def get_session_maker(self, config: Config) -> async_sessionmaker[AsyncSession]:
         return new_session_maker(config.postgres)
 
@@ -39,7 +45,7 @@ class AppProvider(Provider):
 
     @provide(scope=Scope.APP)
     def get_groq_adapter(self, config: Config) -> AIAnalyze:
-        return GroqAdapter(api_key=config.groq.api_key)
+        return GroqAdapter(config.groq)
 
     spending_gateways = provide(
         SpendingGateway,
