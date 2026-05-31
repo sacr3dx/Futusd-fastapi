@@ -28,7 +28,7 @@ class AppProvider(Provider):
         return uuid4
 
     @provide(scope=Scope.APP)
-    def hashing_generate(self, obj) -> CryptContext:
+    def hashing_generate(self) -> CryptContext:
         return CryptContext(schemes=[bcrypt])
 
     @provide(scope=Scope.APP)
