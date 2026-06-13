@@ -2,7 +2,7 @@ from abc import abstractmethod
 from typing import Protocol
 from uuid import UUID
 
-from futusd.domain.entities import SpendingDM
+from futusd.domain.entities import SpendingDM, UserDM
 
 
 class SpendingSaver(Protocol):
@@ -43,15 +43,15 @@ class AIAnalyze(Protocol):
 
 class RegisterUser(Protocol):
     @abstractmethod
-    async def register(self, session_id: str, user_uuid: str) -> str:
+    async def register(self, user: UserDM) -> None:
         ...
 
 class InLoginUser(Protocol):
     @abstractmethod
-    async def get_user_uuid(self, session_id: str) -> str | None:
+    async def login(self, session_id: str) -> str | None:
         ...
 
-class DeleteUser(Protocol):
+class LogoutUser(Protocol):
     @abstractmethod
-    async def delete(self, session_id: str) -> str | None:
+    async def logout(self, session_id: str) -> str | None:
         ...

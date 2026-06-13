@@ -94,12 +94,12 @@ class UserRegisterInteractor:
 
     async def __call__(self, dt: UserDTO) -> str:
         uuid = str(self._generate_uuid())
-        password = self._pwd_context.hash(dt.password)
+        hash_password = self._pwd_context.hash(dt.password)
         user = entities.UserDM(
             uuid = uuid,
             username = dt.username,
-            hashed_password=password
+            hashed_password=hash_password
         )
-        await self._user_saver.register(uuid, user.uuid)
+        await self._user_saver.register(user)
         await self._db_session.commit()
         return uuid

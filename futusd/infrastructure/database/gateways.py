@@ -6,10 +6,11 @@ from futusd.application.interfaces import (
     SpendingReader,
     SpendingSaver,
     AllSpendingReader,
-    SpendingDeleter
+    SpendingDeleter, RegisterUser
 )
-from futusd.domain.entities import SpendingDM
-from futusd.infrastructure.models.spending_model import CashOutModel
+from futusd.domain.entities import SpendingDM, UserDM
+from futusd.infrastructure.database.models import CashOutModel, UsersModel
+
 
 class SpendingGateway(
     SpendingReader,
@@ -70,6 +71,19 @@ class SpendingGateway(
             base=spending.base,
             category=spending.category,
             date=spending.date
+        )
+        self._session.add(model)
+        await self._session.commit()
+
+class UserGateway(RegisterUser):
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def register(self, user: UserDM) -> None:
+        model = UsersModel(
+            uuid=user.uuid,
+            username=user.username,
+            hashed_password=user.hashed_password
         )
         self._session.add(model)
         await self._session.commit()
