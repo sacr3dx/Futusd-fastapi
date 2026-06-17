@@ -15,7 +15,11 @@ class SpendingResponseSchema(BaseModel):
 
 class UserCreateSchema(BaseModel):
     username: str = Field(min_length=1, max_length=25, description="User nickname")
-    password: str = Field(min_length=1)
+    password: str = Field(min_length=1, description="User password")
+
+class UserLoginSchema(BaseModel):
+    username: str = Field(min_length=1, max_length=25, description="User nickname")
+    password: str = Field(min_length=1, description="User password")
 
 class AIAnalyzeResponse(BaseModel):
     message: str

@@ -9,3 +9,8 @@ class SpendingDTO:
 class UserDTO:
     username: str
     password: str
+
+@dataclass(slots=True)
+class LoginDTO:
+    username: str
+    password: str

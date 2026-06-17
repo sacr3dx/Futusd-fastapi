@@ -36,6 +36,11 @@ class DBSession(Protocol):
     async def commit(self) -> None:
         ...
 
+class ReadUser(Protocol):
+    @abstractmethod
+    async def get_by_username(self, name: str):
+        ...
+
 class AIAnalyze(Protocol):
     @abstractmethod
     async def analyze_saver(self, spending: list[SpendingDM]) -> str:
@@ -48,7 +53,7 @@ class RegisterUser(Protocol):
 
 class InLoginUser(Protocol):
     @abstractmethod
-    async def login(self, session_id: str) -> str | None:
+    async def login(self, session_id: str, user_uuid: str) -> str | None:
         ...
 
 class LogoutUser(Protocol):

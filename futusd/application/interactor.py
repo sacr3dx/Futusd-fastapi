@@ -3,7 +3,7 @@ from datetime import date
 from passlib.context import CryptContext
 
 from futusd.application import interfaces
-from futusd.application.dto import SpendingDTO, UserDTO
+from futusd.application.dto import SpendingDTO, UserDTO, LoginDTO
 from futusd.domain import entities
 
 
@@ -103,3 +103,30 @@ class UserRegisterInteractor:
         await self._user_saver.register(user)
         await self._db_session.commit()
         return uuid
+
+
+class UserLoginInteractor:
+    def __init__(
+            self,
+            user_reader: interfaces.ReadUser,
+            login_user: interfaces.InLoginUser,
+            generate_uuid: interfaces.GenerateUUID,
+            pwd_context: CryptContext
+    ) -> None:
+        self._user_reader = user_reader
+        self._login_user = login_user
+        self._generate_uuid = generate_uuid
+        self._pwd_context = pwd_context
+
+    async def __call__(self, dt: LoginDTO):
+        user = await self._user_reader.get_by_username(dt.username)
+        if not user:
+            raise ValueError("User is not found")
+
+        checked_password = self._pwd_context.verify(dt.password, user.hashed_password)
+
+        if not checked_password:
+            raise ValueError("Wrong password")
+
+        session_id = str(self._generate_uuid())
+        return await self._login_user.login(session_id, user.uuid)

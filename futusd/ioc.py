@@ -14,7 +14,8 @@ from futusd.application.interactor import (
     NewSpendingInteractor,
     DeleteSpendingInteractor,
     UserRegisterInteractor,
-    AIAnalyzeInteractor
+    AIAnalyzeInteractor,
+    UserLoginInteractor
 )
 from futusd.application.interfaces import AIAnalyze
 from futusd.application.interfaces import DBSession
@@ -22,6 +23,7 @@ from futusd.application.interfaces import DBSession
 from futusd.config import Config
 from futusd.infrastructure.database.database import new_session_maker
 from futusd.infrastructure.database.gateways import SpendingGateway, UserGateway
+from futusd.infrastructure.session.session_gateway import SessionGateway
 from futusd.infrastructure.ai.groq_client import GroqAdapter
 from futusd.infrastructure.session.redis_client import new_redis_client
 
@@ -70,7 +72,18 @@ class AppProvider(Provider):
     user_gateway = provide(
         UserGateway,
         scope=Scope.REQUEST,
-        provides=interfaces.RegisterUser
+        provides=AnyOf[
+            interfaces.RegisterUser,
+            interfaces.ReadUser
+        ]
+    )
+
+    session_gateway = provide(
+        SessionGateway,
+        scope=Scope.REQUEST,
+        provides=AnyOf[
+            interfaces.InLoginUser
+        ]
     )
 
     get_spending_interactor = provide(GetSpendingInteractor, scope=Scope.REQUEST)
@@ -79,6 +92,7 @@ class AppProvider(Provider):
     new_spending_interactor = provide(NewSpendingInteractor, scope=Scope.REQUEST)
 
     user_register_interactor = provide(UserRegisterInteractor, scope=Scope.REQUEST)
+    user_login_interactor = provide(UserLoginInteractor, scope=Scope.REQUEST)
 
     ai_analyze_interactor = provide(AIAnalyzeInteractor, scope=Scope.REQUEST)
     config = from_context(provides=Config, scope=Scope.APP)

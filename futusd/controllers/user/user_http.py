@@ -1,9 +1,12 @@
 from dishka.integrations.fastapi import FromDishka, DishkaRoute
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
 
-from futusd.controllers.schemas import UserCreateSchema
-from futusd.application.dto import UserDTO
-from futusd.application.interactor import UserRegisterInteractor
+from futusd.controllers.schemas import UserCreateSchema, UserLoginSchema
+from futusd.application.dto import UserDTO, LoginDTO
+from futusd.application.interactor import (
+    UserRegisterInteractor,
+    UserLoginInteractor
+)
 
 session_router = APIRouter(prefix="/auth", route_class=DishkaRoute, tags=["User_session"])
 
@@ -19,3 +22,24 @@ async def register_user(
     )
     uuid = await interactor(dto)
     return uuid
+
+@session_router.post("/login")
+async def login_user(
+        data: UserLoginSchema,
+        response: Response,
+        interactor: FromDishka[UserLoginInteractor]
+) -> dict:
+
+    dto = LoginDTO(
+        username=data.username,
+        password=data.password
+    )
+    session_id = await interactor(dto)
+    response.set_cookie(
+        key="session_id",
+        value=session_id,
+        httponly=True,
+        max_age=3600
+    )
+    return {"message": "Success"}
+
