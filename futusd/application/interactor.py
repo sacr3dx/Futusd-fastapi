@@ -130,3 +130,14 @@ class UserLoginInteractor:
 
         session_id = str(self._generate_uuid())
         return await self._login_user.login(session_id, user.uuid)
+
+class UserLogoutInteractor:
+    def __init__(
+            self,
+            user_logout: interfaces.LogoutUser
+    ) -> None:
+        self._user_logout = user_logout
+
+    async def __call__(self, session_id) -> str | None:
+        await self._user_logout.logout(session_id)
+

@@ -17,6 +17,6 @@ class SessionGateway(
         )
         return session_id
 
-    # async def logout(self, session_id: str) -> str | None:
-    #     return await self._redis.delete(f"session:{session_id}")
+    async def logout(self, session_id: str) -> str | None:
+        return await self._redis.delete(f"session:{session_id}")
 

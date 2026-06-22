@@ -15,7 +15,8 @@ from futusd.application.interactor import (
     DeleteSpendingInteractor,
     UserRegisterInteractor,
     AIAnalyzeInteractor,
-    UserLoginInteractor
+    UserLoginInteractor,
+    UserLogoutInteractor
 )
 from futusd.application.interfaces import AIAnalyze
 from futusd.application.interfaces import DBSession
@@ -82,7 +83,8 @@ class AppProvider(Provider):
         SessionGateway,
         scope=Scope.REQUEST,
         provides=AnyOf[
-            interfaces.InLoginUser
+            interfaces.InLoginUser,
+            interfaces.LogoutUser
         ]
     )
 
@@ -93,6 +95,7 @@ class AppProvider(Provider):
 
     user_register_interactor = provide(UserRegisterInteractor, scope=Scope.REQUEST)
     user_login_interactor = provide(UserLoginInteractor, scope=Scope.REQUEST)
+    user_logout_interactor = provide(UserLogoutInteractor, scope=Scope.REQUEST)
 
     ai_analyze_interactor = provide(AIAnalyzeInteractor, scope=Scope.REQUEST)
     config = from_context(provides=Config, scope=Scope.APP)
