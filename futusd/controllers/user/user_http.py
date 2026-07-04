@@ -1,5 +1,6 @@
 from dishka.integrations.fastapi import FromDishka, DishkaRoute
-from fastapi import APIRouter, Response, Request
+from fastapi import APIRouter, Response, Request, HTTPException
+from starlette.status import HTTP_404_NOT_FOUND, HTTP_401_UNAUTHORIZED
 
 from futusd.controllers.schemas import UserCreateSchema, UserLoginSchema
 from futusd.application.dto import UserDTO, LoginDTO
@@ -38,6 +39,12 @@ async def login_user(
 
     session_id = await interactor(dto)
 
+    if not  session_id:
+        raise HTTPException(
+            status_code=HTTP_401_UNAUTHORIZED,
+            detail="Wrong password or username"
+        )
+
     response.set_cookie(
         key="session_id",
         value=session_id,
@@ -52,6 +59,12 @@ async def logout_user(
         response: Response,
         interactor: FromDishka[UserLogoutInteractor]
 ) -> dict:
+
+    if not request.cookies.get("session_id"):
+        raise HTTPException(
+            status_code=HTTP_404_NOT_FOUND,
+            detail="The user is not logged in"
+        )
 
     session_id = request.cookies.get("session_id")
     await interactor(session_id)
